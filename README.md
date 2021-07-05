@@ -18,7 +18,7 @@ To run the given example execute the following:
 
 ```docker run -it --rm --shm-size=128m docker-selenium-python:alpine python ./examples/main.py```
 
-This example scrapes our homepage and writes the services of our company human readable to console. This can be extended using a MS Teams Channel do be sent to.
+This example scrapes our homepage and writes the services of our company human readable to console. This can be extended using a MS Teams Channel do be sent to. Documentation can be found [here](https://docker-selenium-python.readthedocs.io/en/latest/).
 
 # Advanced Usage
 Triggering your script directly at the start of the container requires you to fiddle with the Dockerfile. Simply add your requirements to a ```requirements.txt``` and copy your source files to the image.
