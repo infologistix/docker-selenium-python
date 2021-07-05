@@ -1,4 +1,6 @@
 numpy
 pandas
 selenium
-bs4
+pymsteams
+Office365-REST-Python-Client
+slackclient
