@@ -5,52 +5,46 @@ Docker base image to run python based scripts for selenium in one container. Com
 # Usage
 Build docker-image from scratch. This may take a while, because numpy and pandas must be compiled from source. This is indeed a point, where improvements can begin.
 
-Basic requirements are bs4, pandas, numpy and selenium. Simply change your requirements to your needs. 
+Basic requirements are pandas, numpy and selenium. Simply change your requirements to your needs. 
 
 - Create a python script to trigger selenium based events or crawl the web
 - Copy your files to the specified locations
-- Run ```docker run -it --rm docker-selenium-python:latest python main.py --args```
+- Run ```docker run -it --rm --shm-size=128m docker-selenium-python:latest python main.py```
 
-Intended usage is for crawling scheduled sites on AWS ECS and Azure ACR. Simply build your container as base and add your scripts to it.
+Intended usage is for crawling scheduled sites on AWS ECS and Azure ACR. Simply build the container as base and add your scripts to it. Add ```--shm.size=128m``` to it to ensure running correctly. See Docker Run specifications. For some webpages Chrome needs extra memory.
 
-## Example
-```Python
-from selenium import webdriver
-from selenium.webdriver import ChromeOptions
-from selenium.webdriver.common.keys import Keys
+# Example
+To run the given example execute the following:
 
-def crawl(url):
-	options = ChromeOptions()
-    options.add_arguments("--headless")
-    options.add_arguments("--no-sandbox")
-    driver = webdriver.Chrome(options=options)
-    driver.get(url)
-    return driver
+```docker run -it --rm --shm-size=128m docker-selenium-python:alpine python ./examples/main.py```
 
-# crawl python.org
-d = crawl("https://python.org")
-assert "Python" in d.title
-elem = d.find_element_by_name("q")
-elem.clear()
-elem.send_keys("pycon")
-elem.send_keys(Keys.RETURN)
-assert "No results found." not in d.page_source
-d.close()
-```
+This example scrapes our homepage and writes the services of our company human readable to console. This can be extended using a MS Teams Channel do be sent to.
 
 # Advanced Usage
-Trigger your script direct at the start of the container requires you to edit the Dockerfile like so:
+Triggering your script directly at the start of the container requires you to fiddle with the Dockerfile. Simply add your requirements to a ```requirements.txt``` and copy your source files to the image.
+
+We provide an example script located in examples folder. Use this as a reference guide provided.
+
 ```Dockerfile
-...
+FROM docker-selenium-python:alpine
+
 WORKDIR /usr/src/app
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY examples/ ./
+COPY your/app/ ./
 
-CMD ["python", "main.py", "args"]
+CMD "python main.py"
 ```
-Try using other python-alpine base scripts to utilize as base image to suit your needs.
+
+Simply build this file to suit your applicational use.
+
+When using Machine learning tools use one of our other selenium based Containers by changing the tag:
+
+- buster
+- alpine, latest
+
+For Machine Learning applications we recommend the *buster* tag to install every library there is. Make sure to install only necessary things.
 
 This image was developed for [infologistix GmbH](https://infologistix.de)
