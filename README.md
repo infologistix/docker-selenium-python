@@ -26,7 +26,7 @@ Triggering your script directly at the start of the container requires you to fi
 We provide an example script located in examples folder. Use this as a reference guide provided.
 
 ```Dockerfile
-FROM docker-selenium-python:alpine
+FROM infologistix/docker-selenium-python:alpine
 
 WORKDIR /usr/src/app
 
