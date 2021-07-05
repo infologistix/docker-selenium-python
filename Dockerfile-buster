@@ -1,0 +1,11 @@
+FROM python:3.8-slim-buster
+
+# install chromium
+RUN apt update && apt install -y --no-install-recommends chromium chromium-driver
+RUN apt autoclean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY examples/ ./examples
