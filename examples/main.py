@@ -1,3 +1,8 @@
+'''This example scrapes `infologistix <https://infologistix.de>`_. Intended usage is crawling company consulting services from the webpage.
+
+Utilizes infologistix/docker-python-selenium:alpine as image to run of.
+
+'''
 from typing import Literal
 from selenium.webdriver import Chrome
 from selenium.webdriver import ChromeOptions

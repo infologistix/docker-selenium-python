@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>main &mdash; Docker Selenium Python 1.3 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Docker Selenium Python
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../main.html">Example 1: infologistix GmbH</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Docker Selenium Python</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>main</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for main</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;This example scrapes `infologistix &lt;https://infologistix.de&gt;`_. Intended usage is crawling company consulting services from the webpage.</span>
+
+<span class="sd">Utilizes infologistix/docker-python-selenium:alpine as image to run of.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver</span> <span class="kn">import</span> <span class="n">Chrome</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver</span> <span class="kn">import</span> <span class="n">ChromeOptions</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.remote.webelement</span> <span class="kn">import</span> <span class="n">WebElement</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="kn">import</span> <span class="n">WebDriverWait</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.support</span> <span class="kn">import</span> <span class="n">expected_conditions</span> <span class="k">as</span> <span class="n">EC</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span> 
+<span class="kn">import</span> <span class="nn">pymsteams</span>
+
+<div class="viewcode-block" id="InfologistixCrawler"><a class="viewcode-back" href="../main.html#main.InfologistixCrawler">[docs]</a><span class="k">class</span> <span class="nc">InfologistixCrawler</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;Example Crawler for infologistix homepage.</span>
+<span class="sd">    Crawles services of the webpage and returns them. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    url : str</span>
+<span class="sd">        the url to scrape</span>
+<span class="sd">    headless : bool, default: True</span>
+<span class="sd">        set to true when running in headless environment</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; crawler = InfologistixCrawler(url=&quot;https://infologistix.de&quot;, headless=False)</span>
+<span class="sd">    &gt;&gt;&gt; print(crawler.run())</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">headless</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="n">ChromeOptions</span><span class="p">()</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--no-sandbox&quot;</span><span class="p">)</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--window-size=1280,720&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">headless</span><span class="p">:</span>
+            <span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--headless&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span> <span class="o">=</span> <span class="n">Chrome</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<div class="viewcode-block" id="InfologistixCrawler.getServices"><a class="viewcode-back" href="../main.html#main.InfologistixCrawler.getServices">[docs]</a>    <span class="k">def</span> <span class="nf">getServices</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Scrapes the services of the webpage from infologistix GmbH</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            unsorted list of dict-like service structures</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">WebDriverWait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">presence_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="s2">&quot;Leistungen&quot;</span><span class="p">)))</span>
+        <span class="n">services</span><span class="p">:</span> <span class="n">WebElement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s2">&quot;Leistungen&quot;</span><span class="p">)</span>
+        <span class="n">service</span><span class="p">:</span> <span class="n">WebElement</span>
+        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">services</span><span class="o">.</span><span class="n">find_elements_by_tag_name</span><span class="p">(</span><span class="s2">&quot;section&quot;</span><span class="p">):</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__extract</span><span class="p">(</span><span class="n">service</span><span class="o">.</span><span class="n">find_element_by_class_name</span><span class="p">(</span><span class="s2">&quot;elementor-image-box-content&quot;</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">results</span></div>
+
+    <span class="k">def</span> <span class="nf">__extract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service</span><span class="p">:</span> <span class="n">WebElement</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Extracts the services from each section element.</span>
+<span class="sd">        Contains URI, title and description for each service.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        service : WebElement</span>
+<span class="sd">            a services WebElement to scrape information</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            information on dict-like basis</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;URI&quot;</span> <span class="p">:</span> <span class="n">service</span><span class="o">.</span><span class="n">find_element_by_tag_name</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;Title&quot;</span><span class="p">:</span> <span class="n">service</span><span class="o">.</span><span class="n">find_element_by_tag_name</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+            <span class="s2">&quot;Description&quot;</span><span class="p">:</span> <span class="n">service</span><span class="o">.</span><span class="n">find_element_by_tag_name</span><span class="p">(</span><span class="s2">&quot;p&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="InfologistixCrawler.makeFrame"><a class="viewcode-back" href="../main.html#main.InfologistixCrawler.makeFrame">[docs]</a>    <span class="k">def</span> <span class="nf">makeFrame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">services</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Converts the list into a human readable table format.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        services : list</span>
+<span class="sd">            unsorted list of services</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            table friendly services</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">services</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfologistixCrawler.run"><a class="viewcode-back" href="../main.html#main.InfologistixCrawler.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Runs the Crawler and performs actions in the right order.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">            table friendly services</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getServices</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">makeFrame</span><span class="p">(</span><span class="n">services</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="InfologistixCrawler.close"><a class="viewcode-back" href="../main.html#main.InfologistixCrawler.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&#39;&#39;&#39;Closes the driver.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__driver</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+
+
+
+<div class="viewcode-block" id="sendMSTeams"><a class="viewcode-back" href="../main.html#main.sendMSTeams">[docs]</a><span class="k">def</span> <span class="nf">sendMSTeams</span><span class="p">(</span><span class="n">webhook</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span> <span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">title</span> <span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="kc">True</span><span class="p">]:</span>
+    <span class="sd">&#39;&#39;&#39;Send a message to a Teams channel. </span>
+<span class="sd">    Needs a configured webhook for MS Teams.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    webhook : str</span>
+<span class="sd">        webhook URI to connect to</span>
+<span class="sd">    message : str</span>
+<span class="sd">        a message. Can be Text, Markdown or HTML</span>
+<span class="sd">    title : str</span>
+<span class="sd">        the messages title</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Literal[True]</span>
+<span class="sd">        message was sent</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="n">pymsteams</span><span class="o">.</span><span class="n">connectorcard</span><span class="p">(</span><span class="n">webhook</span><span class="p">)</span>
+    <span class="n">channel</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">channel</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">channel</span><span class="o">.</span><span class="n">send</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">services</span> <span class="o">=</span> <span class="n">InfologistixCrawler</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://infologistix.de&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">services</span><span class="p">)</span>
+    <span class="c1"># make a html table </span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">services</span><span class="o">.</span><span class="n">to_html</span><span class="p">()</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Dienstleistungen Infologistix GmbH&quot;</span>
+    <span class="c1"># comment out if you have a webhook.</span>
+    <span class="c1">#sendMSTeams(&quot;webhook&quot;, message=message, title=title)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, pickmylight.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
