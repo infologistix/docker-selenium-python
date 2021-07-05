@@ -9,9 +9,9 @@ This is the documentation for Examples for the infologistix:docker-selenium-pyth
 
 .. toctree::
    :maxdepth: 2
-   
-   modules
+
    main
+
 
 Indices and tables
 ==================
