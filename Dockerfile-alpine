@@ -1,0 +1,22 @@
+FROM python:3.8-alpine
+
+RUN apk add \
+    chromium \
+    py3-numpy \
+    py3-pandas \
+    py3-cryptography \
+    py3-multidict \
+    py3-yarl \
+    py3-beautifulsoup4 \
+    && rm -rf /var/cache/* \
+    && mkdir /var/cache/apk
+
+RUN apk add chromium-chromedriver
+
+WORKDIR /usr/src/app
+
+ENV PYTHONPATH=/usr/lib/python3.8/site-packages
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY examples/ ./examples
