@@ -9,14 +9,14 @@ Basic requirements are pandas, numpy and selenium. Simply change your requiremen
 
 - Create a python script to trigger selenium based events or crawl the web
 - Copy your files to the specified locations
-- Run ```docker run -it --rm --shm-size=128m docker-selenium-python:latest python main.py```
+- Run ```docker run -it --rm --shm-size=128m infologistix/docker-selenium-python:buster python main.py```
 
 Intended usage is for crawling scheduled sites on AWS ECS and Azure ACR. Simply build the container as base and add your scripts to it. Add ```--shm.size=128m``` to it to ensure running correctly. See Docker Run specifications. For some webpages Chrome needs extra memory.
 
 # Example
 To run the given example execute the following:
 
-```docker run -it --rm --shm-size=128m docker-selenium-python:alpine python ./examples/main.py```
+```docker run -it --rm --shm-size=128m infologistix/docker-selenium-python:buster python ./examples/main.py```
 
 This example scrapes our homepage and writes the services of our company human readable to console. This can be extended using a MS Teams Channel do be sent to. Documentation can be found [here](https://docker-selenium-python.readthedocs.io/en/latest/).
 
