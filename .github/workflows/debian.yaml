@@ -31,3 +31,11 @@ jobs:
           run: echo ${{ steps.qemu-debian.outputs.platforms }}
         - name: output-repo
           run: echo ${{ github.repository }}
+        - name: Build and Push Images
+          uses: docker/build-push-action@v2
+          with:
+            push: true
+            tags: ${{ github.repository }}:latest,${{ github.repository }}:buster
+            context: .
+            file: Dockerfile-buster
+            platforms: linux/arm64,linux/amd64
