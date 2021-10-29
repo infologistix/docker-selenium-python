@@ -14,12 +14,19 @@ jobs:
         - name: Setup QEMU
           uses: docker/setup-qemu-action@v1
           id: qemu-debian
-          #with:
-          #  platforms: linux/arm/v7,linux/arm64/v8,linux/amd64
+          with:
+            platforms: linux/arm/v7,linux/arm64,linux/amd64
         - name: Setup BuildKit
           uses: docker/setup-buildx-action@v1
           id: buildx-debian
+        - name: Dockerhub login
+          uses: docker/login-action@v1
+          with:
+            username: ${{ secrets.DOCKERHUB_USER }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
         - name: output-buildx
           run: echo ${{ steps.buildx-debian.outputs.platforms }}
         - name: output-qemu
           run: echo ${{ steps.qemu-debian.outputs.platforms }}
+        - name: output-repo
+          run: echo ${{ github.repository }}
