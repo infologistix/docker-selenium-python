@@ -8,6 +8,7 @@ on:
 jobs:
   debian:
     runs-on: ubuntu-latest
+    if: ${{ github.repository == 'infologistix/docker-selenium-python' }}
     steps:
         - name: Checkout Files
           uses: actions/checkout@v2
