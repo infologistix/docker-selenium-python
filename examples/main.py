@@ -48,10 +48,10 @@ class InfologistixCrawler():
         '''
         results = list()
         WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located((By.ID, "Leistungen")))
-        services: WebElement = self.__driver.find_element_by_id("Leistungen")
+        services: WebElement = self.__driver.find_element(By.ID, "Leistungen")
         service: WebElement
-        for service in services.find_elements_by_tag_name("section"):
-            results.append(self.__extract(service.find_element_by_class_name("elementor-image-box-content")))
+        for service in services.find_elements(By.TAG_NAME, "section"):
+            results.append(self.__extract(service.find_element(By.CLASS_NAME, "elementor-image-box-content")))
         return results
 
     def __extract(self, service: WebElement) -> dict:
@@ -69,9 +69,9 @@ class InfologistixCrawler():
             information on dict-like basis
         '''
         return {
-            "URI" : service.find_element_by_tag_name("a").get_attribute("href"),
-            "Title": service.find_element_by_tag_name("a").text,
-            "Description": service.find_element_by_tag_name("p").text
+            "URI" : service.find_element(By.TAG_NAME, "a").get_attribute("href"),
+            "Title" : service.find_element(By.TAG_NAME, "a").text,
+            "Description" : service.find_element(By.TAG_NAME, "p").text,
         }
 
     def makeFrame(self, services: list) -> pd.DataFrame:
