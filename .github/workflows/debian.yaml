@@ -25,17 +25,21 @@ jobs:
           with:
             username: ${{ secrets.DOCKERHUB_USER }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
-        - name: output-buildx
-          run: echo ${{ steps.buildx-debian.outputs.platforms }}
-        - name: output-qemu
-          run: echo ${{ steps.qemu-debian.outputs.platforms }}
-        - name: output-repo
-          run: echo ${{ github.repository }}
         - name: Build and Push Images
           uses: docker/build-push-action@v2
           with:
             push: true
-            tags: ${{ github.repository }}:latest,${{ github.repository }}:buster
+            tags: ${{ github.repository }}:latest,${{ github.repository }}:bullseye
             context: .
             file: Dockerfile-buster
             platforms: linux/arm64,linux/amd64
+        - name: Validate image
+          run: docker image inspect ${{ github.repository }}:latest
+        - name: Update Docker Description
+          uses: peter-evans/dockerhub-description@v2
+          with:
+            username: ${{ secrets.DOCKERHUB_USER }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+            repository: ${{ github.repository }}
+            short-description: ${{ github.event.repository.description }}
+            
