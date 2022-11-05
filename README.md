@@ -9,14 +9,14 @@ Basic requirements are pandas, numpy and selenium. Simply change your requiremen
 
 - Create a python script to trigger selenium based events or crawl the web
 - Copy your files to the specified locations
-- Run ```docker run -it --rm --shm-size=128m infologistix/docker-selenium-python:buster python main.py```
+- Run ```docker run -it --rm --shm-size=128m infologistix/docker-selenium-python:latest python main.py```
 
 Intended usage is for crawling scheduled sites on AWS ECS and Azure ACR. Simply build the container as base and add your scripts to it. Add ```--shm.size=128m``` to it to ensure running correctly. See Docker Run specifications. For some webpages Chrome needs extra memory.
 
 # Example
 To run the given example execute the following:
 
-```docker run -it --rm --shm-size=128m infologistix/docker-selenium-python:buster python ./examples/main.py```
+```docker run -it --rm --shm-size=128m infologistix/docker-selenium-python:latest python ./examples/main.py```
 
 This example scrapes our homepage and writes the services of our company human readable to console. This can be extended using a MS Teams Channel do be sent to. Documentation can be found [here](https://docker-selenium-python.readthedocs.io/en/latest/).
 
@@ -42,9 +42,9 @@ Simply build this file to suit your applicational use.
 
 When using Machine learning tools use one of our other selenium based Containers by changing the tag:
 
-- buster
-- alpine, latest
+- bullseye, latest, 3.10, 3.10-bullseye
+- alpine, 3.10-alpine 
 
-For Machine Learning applications we recommend the *buster* tag to install every library there is. Make sure to install only necessary things.
+For Machine Learning applications we recommend the *bullseye* tag to install every library there is. Make sure to install only necessary things.
 
 This image was developed for [infologistix GmbH](https://infologistix.de)
