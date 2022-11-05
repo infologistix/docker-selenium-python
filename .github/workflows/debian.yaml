@@ -33,8 +33,6 @@ jobs:
             context: .
             file: Dockerfile-buster
             platforms: linux/arm64,linux/amd64
-        - name: Validate image
-          run: docker image inspect ${{ github.repository }}:latest
         - name: Update Docker Description
           uses: peter-evans/dockerhub-description@v2
           with:
@@ -69,8 +67,6 @@ jobs:
             context: .
             file: Dockerfile-alpine
             platforms: linux/arm64,linux/amd64
-        - name: Validate image
-          run: docker image inspect ${{ github.repository }}:latest
         - name: Update Docker Description
           uses: peter-evans/dockerhub-description@v2
           with:
