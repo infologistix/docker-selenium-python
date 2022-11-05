@@ -33,6 +33,7 @@ class InfologistixCrawler():
         options = ChromeOptions()
         options.add_argument("--no-sandbox")
         options.add_argument("--window-size=1280,720")
+        options.add_argument("--disable-dev-shm-usage")
         if headless:
             options.add_argument("--headless")
         self.__driver = Chrome(options=options)
@@ -47,11 +48,11 @@ class InfologistixCrawler():
             unsorted list of dict-like service structures
         '''
         results = list()
-        WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located((By.ID, "Leistungen")))
-        services: WebElement = self.__driver.find_element(By.ID, "Leistungen")
+        WebDriverWait(self.__driver, 10).until(EC.presence_of_element_located((By.ID, "it-leistungen")))
+        services: WebElement = self.__driver.find_element(By.ID, "it-leistungen")
         service: WebElement
-        for service in services.find_elements(By.TAG_NAME, "section"):
-            results.append(self.__extract(service.find_element(By.CLASS_NAME, "elementor-image-box-content")))
+        for service in services.find_element(By.TAG_NAME, "section").find_elements(By.CLASS_NAME, "elementor-column"):
+            results.append(self.__extract(service.find_element(By.CLASS_NAME, "elementor-widget-wrap")))
         return results
 
     def __extract(self, service: WebElement) -> dict:
@@ -69,8 +70,7 @@ class InfologistixCrawler():
             information on dict-like basis
         '''
         return {
-            "URI" : service.find_element(By.TAG_NAME, "a").get_attribute("href"),
-            "Title" : service.find_element(By.TAG_NAME, "a").text,
+            "Title" : service.find_element(By.TAG_NAME, "h3").text.replace("\n", " "),
             "Description" : service.find_element(By.TAG_NAME, "p").text,
         }
 
