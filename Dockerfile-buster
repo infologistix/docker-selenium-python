@@ -1,10 +1,10 @@
 ARG ARCH=
-FROM ${ARCH}python:3.9-slim
+FROM ${ARCH}python:3.10-slim
 
 LABEL org.label-schema.maintainer="paul.schmidt@infologistix.de"
-LABEL org.label-schema.build-date="11.05.2022"
+LABEL org.label-schema.build-date="05.11.2022"
 LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.version="python3.9"
+LABEL org.label-schema.version="python3.10"
 
 # install chromium
 RUN apt update && apt install -y --no-install-recommends chromium chromium-driver

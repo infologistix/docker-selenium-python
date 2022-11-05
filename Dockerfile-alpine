@@ -1,21 +1,27 @@
-FROM python:3.8-alpine3.13
+ARG ARCH
+FROM ${ARCH}alpine:3
+
+LABEL org.label-schema.maintainer="paul.schmidt@infologistix.de"
+LABEL org.label-schema.build-date="05.11.2022"
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.version="python3.10"
 
 RUN apk add \
     chromium \
+    python3 \
+    py3-pip \
     py3-numpy \
     py3-pandas \
     py3-cryptography \
     py3-multidict \
     py3-yarl \
     py3-beautifulsoup4 \
+    chromium-chromedriver \
     && rm -rf /var/cache/* \
     && mkdir /var/cache/apk
 
-RUN apk add chromium-chromedriver
-
 WORKDIR /usr/src/app
 
-ENV PYTHONPATH=/usr/lib/python3.8/site-packages
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 RUN rm requirements.txt
