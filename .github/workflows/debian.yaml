@@ -38,7 +38,7 @@ jobs:
             file: Dockerfile-buster
             platforms: linux/arm64,linux/amd64
         - name: Update Docker Description
-          uses: peter-evans/dockerhub-description@v2
+          uses: peter-evans/dockerhub-description@v3
           with:
             username: ${{ secrets.DOCKERHUB_USER }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -72,7 +72,7 @@ jobs:
             file: Dockerfile-alpine
             platforms: linux/arm64,linux/amd64
         - name: Update Docker Description
-          uses: peter-evans/dockerhub-description@v2
+          uses: peter-evans/dockerhub-description@v3
           with:
             username: ${{ secrets.DOCKERHUB_USER }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
